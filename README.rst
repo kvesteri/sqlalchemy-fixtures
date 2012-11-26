@@ -1,7 +1,7 @@
 SQLAlchemy-Fixtures
 ===================
 
-Tools for creating WTForms forms from SQLAlchemy models
+Functional fixtures for SQLAlchemy
 
 
 Resources

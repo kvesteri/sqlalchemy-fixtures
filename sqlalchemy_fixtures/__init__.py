@@ -51,10 +51,12 @@ class FixtureRegistry(object):
                     )
             else:
                 # RelationshipProperty
-                class_ = property_.mapper.class_
-                defaults[property_.key] = (
-                    last_fixture(class_) or fixture(class_)
-                )
+                column = property_.local_side[0]
+                if column.foreign_keys and not column.nullable:
+                    class_ = property_.mapper.class_
+                    defaults[property_.key] = (
+                        last_fixture(class_) or fixture(class_)
+                    )
         return defaults
 
 

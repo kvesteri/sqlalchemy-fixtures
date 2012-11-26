@@ -29,7 +29,7 @@ class Article(Base):
         sa.Integer, sa.ForeignKey(User.id, ondelete='CASCADE'),
         nullable=False
     )
-    author = sa.orm.relationship(User)
+    author = sa.orm.relationship(User, backref='articles')
 
 
 class TestFixtures(object):

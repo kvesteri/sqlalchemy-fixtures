@@ -13,10 +13,15 @@ session = Session()
 FixtureRegistry.session = session
 
 
-class User(Base):
+class Entity(Base):
+    __tablename__ = 'entity'
+    id = sa.Column(sa.Integer, primary_key=True)
+
+
+class User(Entity):
     __tablename__ = 'user'
 
-    id = sa.Column(sa.Integer, primary_key=True)
+    id = sa.Column(sa.Integer, sa.ForeignKey(Entity.id), primary_key=True)
     name = sa.Column(sa.Unicode(255), index=True)
 
 

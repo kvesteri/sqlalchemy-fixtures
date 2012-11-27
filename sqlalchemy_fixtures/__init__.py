@@ -35,8 +35,23 @@ class FixtureRegistry(object):
             cls.session.add(record)
             cls.session.commit()
 
-        cls.records[model].append(record)
+        cls.add_record(model, record)
         return record
+
+    @classmethod
+    def add_record(cls, model, record):
+        """Recursive function that adds record to fixture registries. Given
+        record is added to its class registry as well as in all superclass
+        registries that have __tablename__ present
+
+        :param model:
+        :param record:
+        """
+        for class_ in model.__bases__:
+            cls.add_record(class_, record)
+
+        if hasattr(model, '__tablename__'):
+            cls.records[model].append(record)
 
     @classmethod
     def get_auto_defaults(cls, model):

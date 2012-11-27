@@ -25,6 +25,10 @@ class User(Entity):
     name = sa.Column(sa.Unicode(255), index=True)
 
 
+class Admin(User):
+    pass
+
+
 class Article(Base):
     __tablename__ = 'article'
 
@@ -49,6 +53,7 @@ class TestFixtures(object):
         for table in tables:
             session.execute(table.delete())
         session.commit()
+        FixtureRegistry.reset()
 
     def test_create_fixture(self):
         user = fixture(User)
@@ -73,3 +78,9 @@ class TestFixtures(object):
         fixture(User, name=u'someone')
         article = fixture(Article)
         assert article.author.name == u'someone'
+
+    def test_supports_deep_inheritance(self):
+        admin = fixture(Admin)
+        assert last_fixture(User) == admin
+        assert last_fixture(Admin) == admin
+        assert last_fixture(Entity) == admin

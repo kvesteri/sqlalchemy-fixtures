@@ -1,22 +1,45 @@
-.. SQLAlchemy-Fixtures documentation master file, created by
-   sphinx-quickstart on Mon Nov 26 09:53:25 2012.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+SQLAlchemy-Fixtures
+===================
 
-Welcome to SQLAlchemy-Fixtures's documentation!
-===============================================
+SQLAlchemy-Fixtures is a python package that provides functional fixtures for
+SQLAlchemy based models.
 
-Contents:
+QuickStart
+----------
 
-.. toctree::
-   :maxdepth: 2
+At the heart of SQLAlchemy-Fixtures there are two functions: fixture and last_fixture.
+Function fixture is used for constructing fixtures from models and last_fixture is used
+for getting the last created fixture for given model.
+
+Consider the following model definition:
+
+::
+
+    import sqlalchemy as sa
+    from sqlalchemy import create_engine
+    from sqlalchemy.ext.declarative import declarative_base
+    from sqlalchemy.orm import sessionmaker
+
+    engine = create_engine('sqlite:///:memory:')
+    Base = declarative_base(engine)
+    Session = sessionmaker(bind=engine)
+    session = Session()
+
+    class User(Base):
+        __tablename__ = 'user'
+
+        id = sa.Column(sa.BigInteger, autoincrement=True, primary_key=True)
+        name = sa.Column(sa.Unicode(100))
+        email = sa.Column(sa.Unicode(255))
 
 
 
-Indices and tables
-==================
+::
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+    from sqlalchemy_fixture import fixture, last_fixture
+    FixtureRegistry.set_defaults(User, {'name': 'someone'})
 
+    user = fixture(User)
+    user.name  # someone
+
+    last_fixture(User) == user

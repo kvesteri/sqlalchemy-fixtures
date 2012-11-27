@@ -12,14 +12,35 @@ class FixtureRegistry(object):
 
     @classmethod
     def reset(cls):
+        """
+        Reset the internal record registry
+        """
         cls.records = defaultdict(lambda: [])
 
     @classmethod
     def set_defaults(cls, model, defaults):
+        """
+        Set data defaults for given model
+
+        :param model: sqlalchemy declarative model class
+        :param defaults: key-value dictionary that is passed as attribute
+            default values for given model fixture, keys as attribute names and
+            values as attribute values
+        """
         cls.defaults[model] = defaults
 
     @classmethod
     def create_fixture(cls, model, data={}, _save=True):
+        """
+        Create a fixture for given model based on given data and model based
+        defaults. If _save=True this method also commits the database session.
+
+        :param model: sqlalchemy declarative model class
+        :param data: key-value dictionary that is passed as attribute values
+            for newly created fixture, keys as attribute names and values
+            as attribute values
+        :param _save: whether or not to save created record
+        """
         defaults = cls.get_auto_defaults(model)
 
         if model in cls.defaults:
@@ -46,8 +67,8 @@ class FixtureRegistry(object):
         record is added to its class registry as well as in all superclass
         registries that have __tablename__ present.
 
-        :param model:
-        :param record:
+        :param model: model class that represents record list key
+        :param record: record to be added
         """
         for class_ in model.__bases__:
             cls.add_record(class_, record)
@@ -57,6 +78,13 @@ class FixtureRegistry(object):
 
     @classmethod
     def get_auto_defaults(cls, model):
+        """
+        Returns the automatically constructed default values for given model.
+        By default sqlalchemy-fixtures only sets default values for
+        non-nullable relations.
+
+        :param model: Model to construct the default values for
+        """
         fields = set(model._sa_class_manager.values())
         defaults = {}
         for field in fields:
@@ -79,10 +107,16 @@ class FixtureRegistry(object):
         return defaults
 
 
-def last_fixture(cls):
-    while FixtureRegistry.records[cls]:
+def last_fixture(model):
+    """
+    Return the last created and non-deleted fixture for given model. If no
+    non-deleted record was found this function returns None.
+
+    :param model: sqlalchemy declarative model
+    """
+    while FixtureRegistry.records[model]:
         # fetch the last inserted record
-        record = FixtureRegistry.records[cls][-1]
+        record = FixtureRegistry.records[model][-1]
         state = record._sa_instance_state
 
         # if we find expired attributes, force load them all
@@ -92,10 +126,20 @@ def last_fixture(cls):
             except ObjectDeletedError:
                 state.deleted = True
         if state.deleted or not object_session(record):
-            FixtureRegistry.records[cls].pop()
+            FixtureRegistry.records[model].pop()
         else:
             return record
 
 
-def fixture(cls, _save=True, **kwargs):
-    return FixtureRegistry.create_fixture(cls, kwargs, _save=_save)
+def fixture(model, _save=True, **kwargs):
+    """
+    Create a fixture for given model based on given data and model based
+    defaults. If _save=True this method also commits the database session.
+
+    :param model: sqlalchemy declarative model class
+    :param _save: whether or not to save created record
+    :param **kwargs: key-value dictionary that is passed as attribute values
+        for newly created fixture, keys as attribute names and values
+        as attribute values
+    """
+    return FixtureRegistry.create_fixture(model, kwargs, _save=_save)

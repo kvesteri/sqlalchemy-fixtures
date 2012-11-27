@@ -24,6 +24,10 @@ class User(Entity):
     id = sa.Column(sa.Integer, sa.ForeignKey(Entity.id), primary_key=True)
     name = sa.Column(sa.Unicode(255), index=True)
 
+    def __init__(self):
+        # custom constructor
+        pass
+
 
 class Admin(User):
     pass

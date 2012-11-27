@@ -29,8 +29,10 @@ class FixtureRegistry(object):
         for key, value in defaults.iteritems():
             data.setdefault(key, value)
 
-        # create new record
-        record = model(**data)
+        # create new record and assign data values
+        record = model()
+        for key, value in data.items():
+            setattr(record, key, value)
         if _save:
             cls.session.add(record)
             cls.session.commit()
@@ -42,7 +44,7 @@ class FixtureRegistry(object):
     def add_record(cls, model, record):
         """Recursive function that adds record to fixture registries. Given
         record is added to its class registry as well as in all superclass
-        registries that have __tablename__ present
+        registries that have __tablename__ present.
 
         :param model:
         :param record:

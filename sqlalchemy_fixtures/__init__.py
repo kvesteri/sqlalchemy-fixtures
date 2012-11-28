@@ -1,6 +1,6 @@
 from collections import defaultdict
 from sqlalchemy.orm import object_session
-from sqlalchemy.orm.exc import ObjectDeletedError
+from sqlalchemy.orm.exc import ObjectDeletedError, DetachedInstanceError
 from sqlalchemy.orm.properties import ColumnProperty
 from sqlalchemy.util.langhelpers import symbol
 
@@ -118,14 +118,16 @@ def last_fixture(model):
         # fetch the last inserted record
         record = FixtureRegistry.records[model][-1]
         state = record._sa_instance_state
-
+        detached = False
         # if we find expired attributes, force load them all
         if state.expired_attributes:
             try:
                 state(symbol('PASSIVE_OFF'))
+            except DetachedInstanceError:
+                detached = True
             except ObjectDeletedError:
                 state.deleted = True
-        if state.deleted or not object_session(record):
+        if detached or state.deleted or not object_session(record):
             FixtureRegistry.records[model].pop()
         else:
             return record

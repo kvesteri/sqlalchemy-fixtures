@@ -145,3 +145,17 @@ def fixture(model, _save=True, **kwargs):
         as attribute values
     """
     return FixtureRegistry.create_fixture(model, kwargs, _save=_save)
+
+
+def new(model, **kwargs):
+    """
+    Create a fixture for given model based on given data and model based
+    defaults. Compared to fixture function this function does not add the
+    created object into session.
+
+    :param model: sqlalchemy declarative model class
+    :param **kwargs: key-value dictionary that is passed as attribute values
+        for newly created fixture, keys as attribute names and values
+        as attribute values
+    """
+    return FixtureRegistry.create_fixture(model, kwargs, _save=False)

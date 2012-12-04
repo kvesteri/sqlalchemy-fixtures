@@ -1,5 +1,5 @@
 """
-sqlalchemy-fixtures
+SQLAlchemy-Fixtures
 -------------------
 
 Functional fixtures for SQLAlchemy models.

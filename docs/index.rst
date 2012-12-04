@@ -33,6 +33,14 @@ Consider the following model definition:
         email = sa.Column(sa.Unicode(255))
 
 
+Now creating new fixtures is as easy as: ::
+
+    from sqlalchemy_fixture import fixture
+
+    user = fixture(User, name=u'someone', email=u'john@example.com')
+    last_fixture(User) == user
+
+
 Most of the time you will want your models to contain some default values. This can be
 achieved by using FixtureRegistry.set_defaults function
 ::
@@ -45,10 +53,3 @@ achieved by using FixtureRegistry.set_defaults function
     user.name  # someone
 
     last_fixture(User) == user
-
-
-Model specific defaults can be overridden by each fixture function call using key value
-arguments ::
-
-    user = fixture(User, name=u'someone else')
-    user.name  # someone else

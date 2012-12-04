@@ -41,6 +41,17 @@ Now creating new fixtures is as easy as: ::
     last_fixture(User) == user
 
 
+Sometimes you may want to create fixtures without adding them into session and committing the session.
+SQLAlchemy-Fixtures provides a function called new for this: ::
+
+
+    from sqlalchemy_fixture import new
+
+    # the following object is not saved into database
+    user = new(User, name=u'someone', email=u'john@example.com')
+
+
+
 Most of the time you will want your models to contain some default values. This can be
 achieved by using FixtureRegistry.set_defaults function
 ::

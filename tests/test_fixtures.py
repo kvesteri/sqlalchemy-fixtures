@@ -3,7 +3,7 @@ import sqlalchemy as sa
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy_fixtures import FixtureRegistry, fixture, last_fixture
+from sqlalchemy_fixtures import FixtureRegistry, Lazy, fixture, last_fixture
 
 
 engine = create_engine('sqlite:///:memory:')
@@ -23,6 +23,7 @@ class User(Entity):
 
     id = sa.Column(sa.Integer, sa.ForeignKey(Entity.id), primary_key=True)
     name = sa.Column(sa.Unicode(255), index=True)
+    email = sa.Column(sa.Unicode(255), unique=True)
 
     def __init__(self):
         # custom constructor
@@ -70,9 +71,25 @@ class TestFixtures(object):
         user = fixture(User)
         assert user == last_fixture(User)
 
+    def test_setting_defaults(self):
+        FixtureRegistry.set_defaults(User, {'name': u'Someone'})
+        user = fixture(User)
+        assert user.name == u'Someone'
+
     def test_override_defaults(self):
-        user = fixture(User, name=u'someone')
-        assert user.name == u'someone'
+        FixtureRegistry.set_defaults(User, {'name': u'Someone'})
+        user = fixture(User, name=u'Someone else')
+        assert user.name == u'Someone else'
+
+    def test_lazy_value(self):
+        FixtureRegistry.set_defaults(
+            User, {
+                'name': u'Someone',
+                'email': Lazy(lambda obj: '%s@example.com' % obj.name.lower())
+            }
+        )
+        user = fixture(User)
+        assert user.email == 'someone@example.com'
 
     def test_automatically_sets_non_nullable_relations(self):
         article = fixture(Article)

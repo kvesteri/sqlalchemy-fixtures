@@ -52,8 +52,15 @@ class FixtureRegistry(object):
 
         # create new record and assign data values
         record = model()
+        lazy_properties = {}
         for key, value in data.items():
+            if isinstance(value, Lazy):
+                lazy_properties[key] = value
             setattr(record, key, value)
+
+        for key, value in lazy_properties.items():
+            setattr(record, key, value(record))
+
         if _save:
             cls.session.add(record)
             cls.session.commit()
@@ -105,6 +112,15 @@ class FixtureRegistry(object):
                         last_fixture(class_) or fixture(class_)
                     )
         return defaults
+
+
+class Lazy(object):
+    def __init__(self, callable_=None, dependencies=[]):
+        self.callable = callable_
+        self.dependencies = dependencies
+
+    def __call__(self, obj, *args, **kwargs):
+        return self.callable(obj)
 
 
 def last_fixture(model):

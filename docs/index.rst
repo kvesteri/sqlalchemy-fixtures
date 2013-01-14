@@ -33,11 +33,17 @@ Consider the following model definition:
         email = sa.Column(sa.Unicode(255))
 
 
-Now creating new fixtures is as easy as: ::
+Most of the time you will want your models to contain some default values. This can be
+achieved by using FixtureRegistry.set_defaults function
+::
 
-    from sqlalchemy_fixture import fixture
+    from sqlalchemy_fixture import FixtureRegistry, fixture, last_fixture
 
-    user = fixture(User, name=u'someone', email=u'john@example.com')
+    FixtureRegistry.set_defaults(User, {'name': 'someone'})
+
+    user = fixture(User)
+    user.name  # someone
+
     last_fixture(User) == user
 
 
@@ -51,16 +57,21 @@ SQLAlchemy-Fixtures provides a function called new for this: ::
     user = new(User, name=u'someone', email=u'john@example.com')
 
 
+Lazy values
+-----------
 
-Most of the time you will want your models to contain some default values. This can be
-achieved by using FixtureRegistry.set_defaults function
+Lazy values provide a convenient way to generate values based on object attributes. In the following example
+our User fixture will generate its email based on its name.
 ::
 
-    from sqlalchemy_fixture import fixture, last_fixture
+    from sqlalchemy_fixture import FixtureRegistry, Lazy, fixture, last_fixture
 
-    FixtureRegistry.set_defaults(User, {'name': 'someone'})
+    FixtureRegistry.set_defaults(
+        User, {'email': Lazy(lambda obj: '%s@example.com' % obj.name.lower())})
 
     user = fixture(User)
-    user.name  # someone
+    user.name = 'someone'
+    user.email  # someone@example.com
 
-    last_fixture(User) == user
+
+

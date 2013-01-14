@@ -115,9 +115,8 @@ class FixtureRegistry(object):
 
 
 class Lazy(object):
-    def __init__(self, callable_=None, dependencies=[]):
+    def __init__(self, callable_=None):
         self.callable = callable_
-        self.dependencies = dependencies
 
     def __call__(self, obj, *args, **kwargs):
         return self.callable(obj)

@@ -43,7 +43,19 @@ class Article(Base):
         sa.Integer, sa.ForeignKey(User.id, ondelete='CASCADE'),
         nullable=False
     )
-    author = sa.orm.relationship(User, backref='articles')
+    author = sa.orm.relationship(
+        User,
+        backref='articles',
+        primaryjoin=author_id == User.id
+    )
+
+    owner_id = sa.Column(
+        sa.Integer, sa.ForeignKey(User.id, ondelete='CASCADE'),
+        nullable=False
+    )
+    owner = sa.orm.relationship(
+        User, primaryjoin=owner_id == User.id
+    )  # relationship without backref
 
 
 class TestFixtures(object):
@@ -99,6 +111,7 @@ class TestFixtures(object):
         fixture(User, name=u'someone')
         article = fixture(Article)
         assert article.author.name == u'someone'
+        assert article.owner.name == u'someone'
 
     def test_supports_deep_inheritance(self):
         admin = fixture(Admin)

@@ -3,7 +3,9 @@ import sqlalchemy as sa
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy_fixtures import FixtureRegistry, Lazy, fixture, last_fixture
+from sqlalchemy_fixtures import (
+    FixtureRegistry, Lazy, fixture, last_fixture, new
+)
 
 
 engine = create_engine('sqlite:///:memory:')
@@ -118,3 +120,7 @@ class TestFixtures(object):
         assert last_fixture(User) == admin
         assert last_fixture(Admin) == admin
         assert last_fixture(Entity) == admin
+
+    def test_using_new_does_not_commit_related_records(self):
+        new(Article)
+        assert not session.query(User).all()  # should not create user

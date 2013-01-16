@@ -41,7 +41,7 @@ class FixtureRegistry(object):
             as attribute values
         :param _save: whether or not to save created record
         """
-        defaults = cls.get_auto_defaults(model)
+        defaults = cls.get_auto_defaults(model, _save=_save)
 
         if model in cls.defaults:
             defaults.update(cls.defaults[model])
@@ -84,13 +84,14 @@ class FixtureRegistry(object):
             cls.records[model].append(record)
 
     @classmethod
-    def get_auto_defaults(cls, model):
+    def get_auto_defaults(cls, model, _save=True):
         """
         Returns the automatically constructed default values for given model.
         By default sqlalchemy-fixtures only sets default values for
         non-nullable relations.
 
         :param model: Model to construct the default values for
+        :param _save: whether or not to save the related records
         """
         fields = set(model._sa_class_manager.values())
         defaults = {}
@@ -109,7 +110,7 @@ class FixtureRegistry(object):
                         not column.primary_key):
                     class_ = property_.mapper.class_
                     defaults[property_.key] = (
-                        last_fixture(class_) or fixture(class_)
+                        last_fixture(class_) or fixture(class_, _save=_save)
                     )
         return defaults
 

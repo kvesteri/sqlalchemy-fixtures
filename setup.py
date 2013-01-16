@@ -23,7 +23,7 @@ class PyTest(Command):
         raise SystemExit(errno)
 
 setup(
-    name='sqlalchemy-fixtures',
+    name='SQLAlchemy-Fixtures',
     version='0.1.2',
     url='https://github.com/kvesteri/sqlalchemy-fixtures',
     license='BSD',

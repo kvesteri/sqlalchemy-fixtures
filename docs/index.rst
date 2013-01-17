@@ -69,8 +69,7 @@ our User fixture will generate its email based on its name.
     FixtureRegistry.set_defaults(
         User, {'email': Lazy(lambda obj: '%s@example.com' % obj.name.lower())})
 
-    user = fixture(User)
-    user.name = 'someone'
+    user = fixture(User, name=u'someone')
     user.email  # someone@example.com
 
 

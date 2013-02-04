@@ -4,6 +4,12 @@ Changelog
 Here you can see the full list of changes between each SQLAlchemy-Fixtures release.
 
 
+0.1.3 (2012-02-04)
+^^^^^^^^^^^^^^^^^^
+
+- Fixed travis.yml
+
+
 0.1.2 (2012-12-10)
 ^^^^^^^^^^^^^^^^^
 

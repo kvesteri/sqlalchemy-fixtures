@@ -4,6 +4,18 @@ Changelog
 Here you can see the full list of changes between each SQLAlchemy-Fixtures release.
 
 
+0.1.5 (2012-03-28)
+^^^^^^^^^^^^^^^^^^
+
+- SQLAlchemy minimum requirement changed to 0.8
+
+
+0.1.4 (2012-02-04)
+^^^^^^^^^^^^^^^^^^
+
+- Fixed travis.yml
+
+
 0.1.3 (2012-02-04)
 ^^^^^^^^^^^^^^^^^^
 

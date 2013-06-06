@@ -3,20 +3,25 @@ Changelog
 
 Here you can see the full list of changes between each SQLAlchemy-Fixtures release.
 
+0.1.6 (2013-06-06)
+^^^^^^^^^^^^^^^^^^
 
-0.1.5 (2012-03-28)
+- Assigning relationship defaults can be disabled.
+
+
+0.1.5 (2013-03-28)
 ^^^^^^^^^^^^^^^^^^
 
 - SQLAlchemy minimum requirement changed to 0.8
 
 
-0.1.4 (2012-02-04)
+0.1.4 (2013-02-04)
 ^^^^^^^^^^^^^^^^^^
 
 - Fixed travis.yml
 
 
-0.1.3 (2012-02-04)
+0.1.3 (2013-02-04)
 ^^^^^^^^^^^^^^^^^^
 
 - Fixed travis.yml

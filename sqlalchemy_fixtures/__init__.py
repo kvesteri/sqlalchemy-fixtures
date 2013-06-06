@@ -9,6 +9,7 @@ class FixtureRegistry(object):
     session = None
     defaults = {}
     records = defaultdict(lambda: [])
+    assign_relationship_defaults = True
 
     @classmethod
     def reset(cls):
@@ -104,6 +105,9 @@ class FixtureRegistry(object):
                     )
             else:
                 # RelationshipProperty
+
+                if not cls.assign_relationship_defaults:
+                    continue
 
                 column = list(property_.local_columns)[0]
                 if (column.foreign_keys and not column.nullable and

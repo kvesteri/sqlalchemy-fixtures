@@ -1,3 +1,6 @@
+* This package is no longer maintained, use https://factoryboy.readthedocs.org/en/latest/ instead *
+
+
 SQLAlchemy-Fixtures
 ===================
 

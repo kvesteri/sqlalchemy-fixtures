@@ -142,7 +142,7 @@ def last_fixture(model):
         # if we find expired attributes, force load them all
         if state.expired_attributes:
             try:
-                state(symbol('PASSIVE_OFF'))
+                state(None, symbol('PASSIVE_OFF'))
             except DetachedInstanceError:
                 detached = True
             except ObjectDeletedError:

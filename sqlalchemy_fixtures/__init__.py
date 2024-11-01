@@ -48,7 +48,7 @@ class FixtureRegistry(object):
             defaults.update(cls.defaults[model])
 
         # set defaults
-        for key, value in defaults.iteritems():
+        for key, value in defaults.items():
             data.setdefault(key, value)
 
         # create new record and assign data values
